@@ -18,53 +18,61 @@ require "tarefa_controller.php";
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	<script>
 		function editar(id, txt_tarefa) {
-			
+
 			// criar um form de edição
 			let form = document.createElement('form')
 			form.action = 'tarefa_controller.php?acao=atualizar';
 			form.method = 'post';
 			form.className = 'row';
-			
+
 			// criar um input para entrada de dados
 			let inputTarefa = document.createElement('input')
 			inputTarefa.type = 'text';
 			inputTarefa.name = 'tarefa';
 			inputTarefa.className = 'form-control col-9';
 			inputTarefa.value = txt_tarefa;
-			
+
 			// criar um input hidden para guardar o id da tarefa
 			let inputId = document.createElement('input')
 			inputId.type = 'hidden';
 			inputId.name = 'id';
 			inputId.value = id;
-			
+
 			// criar um botão para envio do form
 			let button = document.createElement('button')
 			button.type = 'submit';
 			button.className = 'btn btn-info col-3';
 			button.innerHTML = 'Atualizar';
-			
+
 			//incluir inputTarefa no form
 			form.appendChild(inputTarefa);
-			
+
 			//incluir inputId no form
 			form.appendChild(inputId);
-			
+
 			//incluir button no form
 			form.appendChild(button);
-			
+
 			//teste
 			// console.log(form);
-			
+
 			//selecionar a div tarefa
-			let tarefa = document.getElementById('tarefa_'+id);
-			
+			let tarefa = document.getElementById('tarefa_' + id);
+
 			//limpar o texto para inclusão do form
 			tarefa.innerHTML = '';
-			
+
 			//incluir form na página
 			tarefa.insertBefore(form, tarefa[0]);
-			
+
+		}
+
+		function remover(id) {
+			location.href = 'todas_tarefas.php?acao=remover&id=' + id;
+		}
+
+		function marcarRealizada(id) {
+			location.href = 'todas_tarefas.php?acao=marcarRealizada&id=' + id;
 		}
 	</script>
 </head>
@@ -105,10 +113,11 @@ require "tarefa_controller.php";
 
 									</div>
 									<div class="col-sm-3 mt-2 d-flex justify-content-between">
-										<i class="fas fa-trash-alt fa-lg text-danger"></i>
-										<i class="fas fa-edit fa-lg text-info" onclick="editar(<?= $tarefa->id; ?>,
-										'<?= $tarefa->tarefa; ?>')"></i>
-										<i class="fas fa-check-square fa-lg text-success"></i>
+										<?php if ($tarefa->status == 'pendente') { ?>
+											<i class="fas fa-trash-alt fa-lg text-danger" onclick="remover(<?= $tarefa->id; ?>)"></i>
+											<i class="fas fa-edit fa-lg text-info" onclick="editar(<?= $tarefa->id; ?>,'<?= $tarefa->tarefa; ?>')"></i>
+											<i class="fas fa-check-square fa-lg text-success" onclick="marcarRealizada(<?= $tarefa->id ?>)"></i>
+										<?php } ?>
 									</div>
 								</div>
 
